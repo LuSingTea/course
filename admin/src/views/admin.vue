@@ -354,11 +354,11 @@
         </div><!-- /.sidebar-shortcuts -->
 
         <ul class="nav nav-list">
-          <li class="">
-            <a href="index.html">
+          <li class="" id="weclome-sidebar">
+            <router-link to="/welcome">
               <i class="menu-icon fa fa-tachometer"></i>
               <span class="menu-text"> 欢迎 </span>
-            </a>
+            </router-link>
 
             <b class="arrow"></b>
           </li>
@@ -398,7 +398,7 @@
             </ul>
           </li>
 
-          <li class="">
+          <li class="active open">
             <a href="#" class="dropdown-toggle">
               <i class="menu-icon fa fa-desktop"></i>
               <span class="menu-text">
@@ -411,12 +411,12 @@
             <b class="arrow"></b>
 
             <ul class="submenu">
-              <li class="">
-                <a href="#" class="dropdown-toggle">
+              <li id="business-chapter-sidebar">
+                <router-link to="/business/chapter" class="dropdown-toggle">
                   <i class="menu-icon fa fa-caret-right"></i>
-                  章节管理
+                  大章管理
                   <b class="arrow fa fa-angle-down"></b>
-                </a>
+                </router-link>
               </li>
             </ul>
           </li>
@@ -506,9 +506,41 @@
       $("body").removeClass("class", "login-layout light-login");
       $("body").attr("class", "no-skin");
     },
+    watch: {
+      $route: {
+        handler:function(val, oldVal){
+          // sidebar激活样式方法二
+          console.log("---->页面跳转：", val, oldVal);
+          let _this = this;
+
+          // if (!_this.hasResourceRouter(val.name)) {
+          //   _this.$router.push("/login");
+          //   return;
+          // }
+
+          _this.$nextTick(function(){  //页面加载完成后执行
+            _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
+          })
+        }
+      }
+    },
     methods: {
       login() {
         this.$router.push("/admin")
+      },
+      activeSidebar: function (id) {
+        // 兄弟菜单去掉active样式，自身增加active样式
+        $("#" + id).siblings().removeClass("active");
+        $("#" + id).siblings().find("li").removeClass("active");
+        $("#" + id).addClass("active");
+
+        // 如果有父菜单，父菜单的兄弟菜单去掉open active，父菜单增加open active
+        let parentLi = $("#" + id).parents("li");
+        if (parentLi) {
+          parentLi.siblings().removeClass("open active");
+          parentLi.siblings().find("li").removeClass("active");
+          parentLi.addClass("open active");
+        }
       }
     }
   }
