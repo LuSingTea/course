@@ -1,6 +1,5 @@
-package com.course.business.controller;
+package com.course.business.controller.admin;
 
-import com.course.server.domain.Test;
 import com.course.server.dto.PageDto;
 import com.course.server.service.ChapterService;
 import com.course.server.service.TestService;
