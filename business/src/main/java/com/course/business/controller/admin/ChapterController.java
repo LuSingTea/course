@@ -38,7 +38,7 @@ public class ChapterController {
     @DeleteMapping("/delete/{id}")
     public ResponseDto delete(@PathVariable("id") String id) {
         ResponseDto responseDto = new ResponseDto();
-        chapterService.delete(String id);
+        chapterService.delete(id);
         return responseDto;
     }
 

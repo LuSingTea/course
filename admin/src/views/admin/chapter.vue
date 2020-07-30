@@ -49,7 +49,8 @@
                 <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
               </button>
 
-              <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+              <ul
+                class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
                 <li>
                   <a href="#" class="tooltip-info" data-rel="tooltip" title="View">
                   <span class="blue">
@@ -85,7 +86,8 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">表单</h4>
           </div>
           <div class="modal-body">
@@ -93,7 +95,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">名称</label>
                 <div class="col-sm-10">
-                  <input v-model="chapter.name"class="form-control" placeholder="名称">
+                  <input v-model="chapter.name" class="form-control" placeholder="名称">
                 </div>
               </div>
               <div class="form-group">
@@ -116,6 +118,7 @@
 
 <script>
   import pagination from "../../components/pagination";
+
   export default {
     name: "chapter",
     components: {
@@ -160,7 +163,7 @@
         }).then((response) => {
           Loading.hide();
           let resp = response.data;
-          _this.chapters = resp.content.list ;
+          _this.chapters = resp.content.list;
           _this.$refs.pagination.render(page, resp.content.total);
         })
       },
@@ -168,7 +171,7 @@
       save(page) {
         let _this = this;
         Loading.show();
-        _this.$ajax.post("http://127.0.0.1:9002/business/admin/chapter/save", _this.chapter).then((res) => {
+        _this.$ajax.post("http://127.0.0.1:9002/business/admin/chapter/save", _this.chapter).then((response) => {
           Loading.hide();
           console.log("保存大章结果列表");
           let resp = response.data;
@@ -176,8 +179,7 @@
             $("#form-modal").modal("hide");
             _this.list(1);
             Toast.success("保存成功");
-          }
-          else {
+          } else {
             Toast.warning(resp.message);
           }
         })
@@ -187,7 +189,7 @@
         let _this = this;
         Confirm.show("删除大章后不可恢复，确认删除？", function () {
           Loading.show();
-          _this.$ajax.delete("http://127.0.0.1:9002/business/admin/chapter/delete/" + id).then((response)=>{
+          _this.$ajax.delete("http://127.0.0.1:9002/business/admin/chapter/delete/" + id).then((response) => {
             Loading.hide();
             let resp = response.data;
             if (resp.success) {
