@@ -35,23 +35,14 @@
         <td>{{chapter.courseId}}</td>
         <td>
           <div class="hidden-sm hidden-xs btn-group">
-            <button class="btn btn-xs btn-success">
-              <i class="ace-icon fa fa-check bigger-120"></i>
-            </button>
-
-            <button class="btn btn-xs btn-info">
+            <button v-on:click="edit(chapter)" class="btn btn-xs btn-info">
               <i class="ace-icon fa fa-pencil bigger-120"></i>
             </button>
-
-            <button class="btn btn-xs btn-danger">
+            <button v-on:click="del(chapter.id)" class="btn btn-xs btn-danger">
               <i class="ace-icon fa fa-trash-o bigger-120"></i>
             </button>
-
-            <button class="btn btn-xs btn-warning">
-              <i class="ace-icon fa fa-flag bigger-120"></i>
-            </button>
           </div>
-
+          <!-- 根据不同的分辨率有不同的显示效果 -->
           <div class="hidden-md hidden-lg">
             <div class="inline pos-rel">
               <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
@@ -102,13 +93,13 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">名称</label>
                 <div class="col-sm-10">
-                  <input class="form-control" placeholder="名称">
+                  <input v-model="chapter.name"class="form-control" placeholder="名称">
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label">课程</label>
+                <label class="col-sm-2 control-label">课程ID</label>
                 <div class="col-sm-10">
-                  <p class="form-control-static">sda</p>
+                  <input v-model="chapter.courseId" class="form-control" placeholder="课程ID">
                 </div>
               </div>
             </form>
@@ -153,16 +144,58 @@
         _this.chapter = {};
         $("#form-modal").modal("show");
       },
+      edit(chapter) {
+        let _this = this;
+        // 解决双向数据绑定的问题
+        _this.chapter = $.extend({}, chapter);
+        $("#form-modal").modal("show");
+      },
 
       list(page) {
         let _this = this;
+        Loading.show();
         _this.$ajax.post("http://127.0.0.1:9002/business/admin/chapter/list", {
           page: page,
           size: _this.$refs.pagination.size
-        }).then((res) => {
-          _this.chapters = res.data.list;
-          _this.$refs.pagination.render(page, res.data.total);
+        }).then((response) => {
+          Loading.hide();
+          let resp = response.data;
+          _this.chapters = resp.content.list ;
+          _this.$refs.pagination.render(page, resp.content.total);
         })
+      },
+
+      save(page) {
+        let _this = this;
+        Loading.show();
+        _this.$ajax.post("http://127.0.0.1:9002/business/admin/chapter/save", _this.chapter).then((res) => {
+          Loading.hide();
+          console.log("保存大章结果列表");
+          let resp = response.data;
+          if (resp.success) {
+            $("#form-modal").modal("hide");
+            _this.list(1);
+            Toast.success("保存成功");
+          }
+          else {
+            Toast.warning(resp.message);
+          }
+        })
+      },
+
+      del(id) {
+        let _this = this;
+        Confirm.show("删除大章后不可恢复，确认删除？", function () {
+          Loading.show();
+          _this.$ajax.delete("http://127.0.0.1:9002/business/admin/chapter/delete/" + id).then((response)=>{
+            Loading.hide();
+            let resp = response.data;
+            if (resp.success) {
+              _this.list(1);
+              Toast.success("删除成功！");
+            }
+          })
+        });
       }
     },
 

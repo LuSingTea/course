@@ -8,11 +8,14 @@ import com.course.server.dto.ChapterDto;
 import com.course.server.dto.PageDto;
 import com.course.server.mapper.ChapterMapper;
 import com.course.server.mapper.TestMapper;
+import com.course.server.util.CopyUtil;
+import com.course.server.util.UuidUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,4 +48,25 @@ public class ChapterService {
         pageDto.setList(chapterDtoList);
     }
 
+    public void save(ChapterDto chapterDto) {
+        Chapter copy = CopyUtil.copy(chapterDto, Chapter.class);
+        if (StringUtils.isEmpty(chapterDto.getId())) {
+            this.insert(copy);
+        }
+        else {
+            this.update(copy);
+        }
+    }
+    protected void insert(Chapter chapter) {
+        chapter.setId(UuidUtil.getShortUuid());
+        chapterMapper.insert(chapter);
+    }
+
+    protected void update(Chapter chapter) {
+        chapterMapper.updateByPrimaryKey(chapter);
+    }
+
+    public void delete(String id) {
+        chapterMapper.deleteByPrimaryKey(id);
+    }
 }
