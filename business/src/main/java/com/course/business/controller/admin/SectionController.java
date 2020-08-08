@@ -1,7 +1,8 @@
 package com.course.business.controller.admin;
 
-import com.course.server.dto.ResponseDto;
 import com.course.server.dto.SectionDto;
+import com.course.server.dto.PageDto;
+import com.course.server.dto.ResponseDto;
 import com.course.server.dto.SectionPageDto;
 import com.course.server.service.SectionService;
 import com.course.server.util.ValidatorUtil;
@@ -25,12 +26,12 @@ public class SectionController {
      * 列表查询
      */
     @PostMapping("/list")
-    public ResponseDto list(@RequestBody SectionPageDto sectionPageDto) {
+    public ResponseDto list(@RequestBody SectionPageDto pageDto) {
         ResponseDto responseDto = new ResponseDto();
-        ValidatorUtil.require(sectionPageDto.getCourseId(), "课程ID");
-        ValidatorUtil.require(sectionPageDto.getChapterId(), "大章ID");
-        sectionService.list(sectionPageDto);
-        responseDto.setContent(sectionPageDto);
+        ValidatorUtil.require(pageDto.getCourseId(), "课程ID");
+        ValidatorUtil.require(pageDto.getChapterId(), "大章ID");
+        sectionService.list(pageDto);
+        responseDto.setContent(pageDto);
         return responseDto;
     }
 
@@ -45,7 +46,7 @@ public class SectionController {
         ValidatorUtil.length(sectionDto.getVideo(), "视频", 1, 200);
 
         ResponseDto responseDto = new ResponseDto();
-        // sectionService.save(sectionDto);
+        sectionService.save(sectionDto);
         responseDto.setContent(sectionDto);
         return responseDto;
     }

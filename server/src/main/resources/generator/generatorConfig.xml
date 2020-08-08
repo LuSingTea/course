@@ -24,8 +24,8 @@
                         connectionURL="jdbc:mysql://localhost:3306/course?useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf-8"
                         userId="root"
                         password="123456">
+            <property name="nullCatalogMeansCurrent" value="true"/>
         </jdbcConnection>
-
         <!-- domain类的位置 -->
         <javaModelGenerator targetProject="src\main\java"
                             targetPackage="com.course.server.domain"/>
@@ -41,9 +41,11 @@
 
 <!--        <table tableName="test" domainObjectName="Test"/>-->
 <!--        <table tableName="chapter" domainObjectName="Chapter"/>-->
-        <table tableName="section" domainObjectName="Section"/>
+<!--        <table tableName="section" domainObjectName="Section"/>-->
 <!--        <table tableName="course" domainObjectName="Course"/>-->
-<!--        <table tableName="course_content" domainObjectName="CourseContent"/>-->
+<!--        <table tableName="category" domainObjectName="Category"/>-->
+<!--        <table tableName="course_category" domainObjectName="CourseCategory"/>-->
+        <table tableName="course_content" domainObjectName="CourseContent"/>
 <!--        <table tableName="course_content_file" domainObjectName="CourseContentFile"/>-->
 <!--        <table tableName="teacher" domainObjectName="Teacher"/>-->
 <!--        <table tableName="file" domainObjectName="File"/>-->

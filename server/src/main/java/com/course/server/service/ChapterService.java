@@ -2,9 +2,8 @@ package com.course.server.service;
 
 import com.course.server.domain.Chapter;
 import com.course.server.domain.ChapterExample;
-import com.course.server.domain.Test;
-import com.course.server.domain.TestExample;
 import com.course.server.dto.ChapterDto;
+import com.course.server.dto.ChapterPageDto;
 import com.course.server.dto.PageDto;
 import com.course.server.mapper.ChapterMapper;
 import com.course.server.mapper.TestMapper;
@@ -32,20 +31,20 @@ public class ChapterService {
     @Autowired
     private ChapterMapper chapterMapper;
 
-    public void list(PageDto pageDto) {
-        PageHelper.startPage(pageDto.getPage(), pageDto.getSize());
+    public void list(ChapterPageDto chapterPageDto) {
+        PageHelper.startPage(chapterPageDto.getPage(), chapterPageDto.getSize());
         ChapterExample chapterExample = new ChapterExample();
-        List<Chapter> chapters = chapterMapper.selectByExample(chapterExample);
-        ArrayList<ChapterDto> chapterDtoList = new ArrayList<>();
-        PageInfo<Chapter> chapterPageInfo = new PageInfo<>(chapters);
-        pageDto.setTotal(chapterPageInfo.getTotal());
-        for (Chapter chapter : chapters) {
-            ChapterDto chapterDto = new ChapterDto();
-            BeanUtils.copyProperties(chapter, chapterDto);
-            chapterDtoList.add(chapterDto);
+        ChapterExample.Criteria criteria = chapterExample.createCriteria();
+        if (!StringUtils.isEmpty(chapterPageDto.getCourseId())) {
+            criteria.andCourseIdEqualTo(chapterPageDto.getCourseId());
         }
 
-        pageDto.setList(chapterDtoList);
+        List<Chapter> chapters = chapterMapper.selectByExample(chapterExample);
+        PageInfo<Chapter> chapterPageInfo = new PageInfo<>(chapters);
+        chapterPageDto.setTotal(chapterPageInfo.getTotal());
+        List<ChapterDto> chapterDtoList = CopyUtil.copyList(chapters, ChapterDto.class);
+
+        chapterPageDto.setList(chapterDtoList);
     }
 
     public void save(ChapterDto chapterDto) {
