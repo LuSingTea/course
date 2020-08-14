@@ -85,7 +85,16 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">大章</label>
                 <div class="col-sm-10">
-                  <p class="form-control-static">{{chapter.name}}</p>
+                  <file v-bind:text="'上传视频'"
+                        v-bind:input-id="'video-upload'"
+                        v-bind:after-upload="afterUpload(resp)"
+                        v-bind:use="FILE_USE.COURSE.key"
+                        v-bind:suffixs="['mp4']"></file>
+                  <div v-show="course.image" class="row">
+                    <div class="col-md-10">
+                      <video id="video" v-bind:src="section.video" controls="controls"></video>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="form-group">
@@ -128,15 +137,22 @@
 
 <script>
   import Pagination from "../../components/pagination";
+  import File from "../../components/file";
+  import BigFile from "../../components/big-file";
 
   export default {
-    components: {Pagination},
+    components: {
+      Pagination,
+      File,
+      BigFile
+    },
     name: "business-section",
     data: function () {
       return {
         section: {},
         sections: [],
         SECTION_CHARGE: SECTION_CHARGE,
+        FILE_USE: FILE_USE,
         course: {},
         chapter: {},
       }
@@ -242,7 +258,31 @@
             }
           })
         });
-      }
+      },
+      afterUpload(resp) {
+        let _this = this;
+        let section = resp.content.path;
+        _this.section.video = section;
+        _this.getTime();
+      },
+      /**
+       * 获取时长
+       */
+      getTime() {
+        let _this = this;
+        setTimeout(function () {
+          let ele = document.getElementById("video");
+          _this.section.time = parseInt(ele.duration, 10);
+        }, 1000);
+      },
     }
   }
 </script>
+
+<style scoped>
+  video {
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+  }
+</style>

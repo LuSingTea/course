@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>hello welcome</div>
+    <div style="font-size: 20px;">欢迎来到控制台</div>
   </div>
 </template>
 
